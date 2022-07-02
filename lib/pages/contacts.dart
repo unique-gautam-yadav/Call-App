@@ -83,18 +83,24 @@ class _ContactsState extends State<Contacts> {
                     child: Card(
                       shape: const StadiumBorder(),
                       child: ListTile(
-                        leading: (contact.avatar != null &&
-                                contact.avatar.isNotEmpty)
-                            ? CircleAvatar(
-                                backgroundImage: MemoryImage(contact.avatar))
-                            : CircleAvatar(
-                                child: contact.initials().isNotEmpty
-                                    ? Text(contact.initials())
-                                    : const Icon(Icons.person),
-                              ),
+                        leading: Hero(
+                          tag: Key("contactProfile${contact.identifier}"),
+                          child: (contact.avatar != null &&
+                                  contact.avatar.isNotEmpty)
+                              ? CircleAvatar(
+                                  backgroundImage: MemoryImage(contact.avatar))
+                              : CircleAvatar(
+                                  child: contact.initials().isNotEmpty
+                                      ? Text(contact.initials())
+                                      : const Icon(Icons.person),
+                                ),
+                        ),
                         title: Text(contact.displayName),
                         subtitle: Text(contact.phones.last.value),
-                        onTap: () {
+                        onTap: () async {
+                          await Future.delayed(
+                              const Duration(milliseconds: 300));
+                          // ignore: use_build_context_synchronously
                           Navigator.push(
                               context,
                               MaterialPageRoute(

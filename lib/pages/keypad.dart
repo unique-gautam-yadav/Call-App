@@ -16,7 +16,7 @@ class KeyPad extends StatelessWidget {
             DialPad(
                 dialButtonColor: Theme.of(context).primaryColor,
                 enableDtmf: true,
-                outputMask: "+91 00000 00000",
+                outputMask: "+91-00000 00000",
                 backspaceButtonIconColor: Colors.red,
                 makeCall: (number) {
                   number = "+91$number";

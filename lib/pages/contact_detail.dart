@@ -61,16 +61,18 @@ class _topCard extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SizedBox(
-          height: 85,
-          width: 85,
-          child: (contact.avatar != null && contact.avatar.isNotEmpty)
-              ? CircleAvatar(backgroundImage: MemoryImage(contact.avatar))
-              : CircleAvatar(
-                  child: contact.initials().isNotEmpty
-                      ? Text(contact.initials())
-                      : const Icon(Icons.person),
-                ),
-        ),
+            height: 85,
+            width: 85,
+            child: Hero(
+              tag: Key("contactProfile${contact.identifier}"),
+              child: (contact.avatar != null && contact.avatar.isNotEmpty)
+                  ? CircleAvatar(backgroundImage: MemoryImage(contact.avatar))
+                  : CircleAvatar(
+                      child: contact.initials().isNotEmpty
+                          ? Text(contact.initials())
+                          : const Icon(Icons.person),
+                    ),
+            )),
         const SizedBox(height: 6),
         Text(
           contact.displayName,
