@@ -18,10 +18,10 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(primaryColor: Colors.indigo),
-      initialRoute: "/contact",
+      initialRoute: "/",
       debugShowCheckedModeBanner: false,
       routes: {
-        // "/": (context) => const HomePage(),
+        "/": (context) => const HomePage(),
         "/contact": (context) => const Contacts(),
       },
     );
