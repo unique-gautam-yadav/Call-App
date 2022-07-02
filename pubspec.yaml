@@ -41,6 +41,7 @@ dependencies:
   flutter_spinkit: ^5.1.0
   url_launcher: ^6.1.4
   flutter_phone_direct_caller: ^2.1.1
+  flutter_dialpad: ^1.0.4
 
 dev_dependencies:
   flutter_test:
