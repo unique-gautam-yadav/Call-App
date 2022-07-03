@@ -16,11 +16,17 @@ class KeyPad extends StatelessWidget {
             DialPad(
                 dialButtonColor: Theme.of(context).primaryColor,
                 enableDtmf: true,
-                outputMask: "+91-00000 00000",
+                outputMask: "00000 00000",
                 backspaceButtonIconColor: Colors.red,
                 makeCall: (number) {
-                  number = "+91$number";
-                  FlutterPhoneDirectCaller.callNumber(number);
+                  if (number != null && number.isNotEmpty) {
+                    print(number);
+                    number = "+91$number";
+                    FlutterPhoneDirectCaller.callNumber(number);
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text("Please enter a number first")));
+                  }
                 }),
             Padding(
               padding: const EdgeInsets.all(8.0),

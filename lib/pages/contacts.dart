@@ -83,6 +83,7 @@ class _ContactsState extends State<Contacts> {
                     child: Card(
                       shape: const StadiumBorder(),
                       child: ListTile(
+                        horizontalTitleGap: 20,
                         leading: Hero(
                           tag: Key("contactProfile${contact.identifier}"),
                           child: (contact.avatar != null &&
