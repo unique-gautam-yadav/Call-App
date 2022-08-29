@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_typing_uninitialized_variables, must_be_immutable
+
 import 'package:flutter/material.dart';
 
 class MyAppBar extends StatelessWidget {
@@ -22,7 +24,7 @@ class MyAppBar extends StatelessWidget {
       children: [
         Text(
           title,
-          style: Theme.of(context).textTheme.headline5,
+          style: Theme.of(context).textTheme.headlineSmall,
         ),
         Row(
           children: [
