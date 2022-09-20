@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:slimmy_card/pages/contacts.dart';
+import 'package:slimmy_card/pages/get_permission.dart';
 import 'package:slimmy_card/pages/home.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
@@ -18,11 +20,10 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(primaryColor: Colors.indigo),
-      initialRoute: "/",
+      initialRoute: "/permission",
       debugShowCheckedModeBanner: false,
       routes: {
-        "/": (context) => const HomePage(),
-        "/contact": (context) => const Contacts(),
+        "/permission": (context) => const GetPermission(),
       },
     );
   }

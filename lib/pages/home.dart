@@ -1,11 +1,7 @@
-import 'dart:ffi';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:slimmy_card/pages/call_logs.dart';
 import 'package:slimmy_card/pages/contacts.dart';
 import 'package:slimmy_card/pages/keypad.dart';
-import 'package:slimy_card/slimy_card.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key key}) : super(key: key);

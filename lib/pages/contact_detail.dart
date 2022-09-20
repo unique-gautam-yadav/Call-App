@@ -1,9 +1,8 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+// ignore_for_file: public_member_api_docs, sort_constructors_first, camel_case_types
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:slimy_card/slimy_card.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class ContactDetail extends StatefulWidget {
   const ContactDetail({Key key, @required this.contact})
@@ -52,11 +51,6 @@ class _topCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _makeCall(String phoneNumber) async {
-      String number = phoneNumber;
-      await FlutterPhoneDirectCaller.callNumber(number);
-    }
-
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -135,7 +129,6 @@ class _bottomCard extends StatelessWidget {
                     child: IconButton(
                         onPressed: () async {
                           String number = phone.value;
-                          print(number);
                           await FlutterPhoneDirectCaller.callNumber(number);
                         },
                         icon: const Icon(Icons.call, color: Colors.black87)),
