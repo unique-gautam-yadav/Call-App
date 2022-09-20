@@ -4,7 +4,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'appbar.dart';
 import 'package:intl/intl.dart';
 
-import 'log_detail.dart';
 
 class CallLogs extends StatefulWidget {
   const CallLogs({Key key}) : super(key: key);
