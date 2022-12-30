@@ -13,21 +13,20 @@ class KeyPad extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            DialPad(
-                dialButtonColor: Theme.of(context).primaryColor,
-                enableDtmf: true,
-                outputMask: "00000 00000",
-                backspaceButtonIconColor: Colors.red,
-                makeCall: (number) {
-                  if (number != null && number.isNotEmpty) {
-                    print(number);
-                    number = "+91$number";
-                    FlutterPhoneDirectCaller.callNumber(number);
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text("Please enter a number first")));
-                  }
-                }),
+            const SizedBox(height: 100),
+            Expanded(
+              child: DialPad(
+                  dialButtonColor: Theme.of(context).primaryColor,
+                  backspaceButtonIconColor: Colors.red,
+                  makeCall: (number) {
+                    if (number != null && number.isNotEmpty) {
+                      FlutterPhoneDirectCaller.callNumber(number);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text("Please enter a number first")));
+                    }
+                  }),
+            ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Center(
@@ -53,7 +52,7 @@ class KeyPad extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 40)
+            const SizedBox(height: 20)
           ],
         ));
   }

@@ -1,7 +1,9 @@
-// ignore_for_file: unused_element, no_leading_underscores_for_local_identifiers
+// ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:slimmy_card/mainPage.dart';
 import 'package:slimmy_card/pages/home.dart';
 
 class GetPermission extends StatefulWidget {
@@ -13,64 +15,48 @@ class GetPermission extends StatefulWidget {
 
 class _GetPermissionState extends State<GetPermission> {
   @override
-  void initState() {
-    var dd = Permission.contacts.status;
-    // ignore: unrelated_type_equality_checks
-    if (dd.isGranted != null && dd.isGranted == true) {
-      // ignore: use_build_context_synchronously
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const HomePage(),
-          ));
-    }
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    // Future<void> _getPermission() {
-    //   print("object");
-    // }
 
-    Future<PermissionStatus> _getContactPermission() async {
-      PermissionStatus permission = await Permission.contacts.status;
-      if (permission != PermissionStatus.granted &&
-          permission != PermissionStatus.permanentlyDenied) {
-        PermissionStatus permissionStatus = await Permission.contacts.request();
-        return permissionStatus;
-      } else {
-        return permission;
+    requestPermissions() async {
+      bool contactPermission = await Permission.contacts.isGranted;
+      bool phonePermission = await Permission.phone.isGranted;
+
+      if (!contactPermission) {
+        PermissionStatus t = await Permission.contacts.request();
+        // if (t.isDenied || t.isPermanentlyDenied) {
+        //   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        //       content: Text("We can't take you without permissions.")));
+        // }
+
+        contactPermission = t.isGranted;
       }
-    }
 
-    void _handleInvalidPermissions(PermissionStatus permissionStatus) {
-      if (permissionStatus == PermissionStatus.denied) {
-        const snackBar =
-            SnackBar(content: Text('Access to contact data denied'));
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      } else if (permissionStatus == PermissionStatus.permanentlyDenied) {
-        const snackBar =
-            SnackBar(content: Text('Contact data not available on device'));
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      if (!phonePermission) {
+        PermissionStatus t = await Permission.phone.request();
+        // if (t.isDenied || t.isPermanentlyDenied) {
+        //   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        //       content: Text("We can't take you without permissions.")));
+        // }
+        phonePermission = t.isGranted;
       }
-    }
 
-    Future<void> _askPermissions(String routeName) async {
-      PermissionStatus permissionStatus = await _getContactPermission();
-      if (permissionStatus != PermissionStatus.granted) {
-        _handleInvalidPermissions(permissionStatus);
-      } else {
-        // ignore: use_build_context_synchronously
+      if (phonePermission && contactPermission) {
+        Navigator.pop(context);
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => const HomePage(),
+              builder: (context) => const MainPage(),
             ));
+      } else {
+        Navigator.pop(context);
+        // print("$phonePermission && $contactPermission");
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text("We can't take you without permissions.")));
       }
     }
 
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
           children: [
@@ -93,9 +79,26 @@ class _GetPermissionState extends State<GetPermission> {
                     backgroundColor: MaterialStateColor.resolveWith(
                         (states) => Colors.indigo)),
                 onPressed: () {
-                  _askPermissions("/");
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return Expanded(
+                        child: Container(
+                          color: Colors.black.withOpacity(0.8),
+                          child: Center(
+                              child: SpinKitRotatingCircle(
+                                  color: Theme.of(context).primaryColor,
+                                  size: 75)),
+                        ),
+                      );
+                    },
+                  );
+                  requestPermissions();
                 },
-                child: const Text("Continue"))
+                child: const Text(
+                  "Continue",
+                  style: TextStyle(color: Colors.white),
+                ))
           ],
         ),
       ),
