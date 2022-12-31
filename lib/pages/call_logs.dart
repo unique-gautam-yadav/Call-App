@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:call_log/call_log.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:slimmy_card/pages/log_detail.dart';
-import 'appbar.dart';
 import 'package:intl/intl.dart';
+
+import '../utils/components.dart';
 
 class CallLogs extends StatefulWidget {
   const CallLogs({Key key}) : super(key: key);
@@ -13,86 +14,56 @@ class CallLogs extends StatefulWidget {
 }
 
 class _CallLogsState extends State<CallLogs> {
-  Iterable<CallLogEntry> entries;
+  List<Widget> items;
   @override
   void initState() {
-    super.initState();
     _getCallLogs();
+    items = <Widget>[];
+
+    super.initState();
   }
 
   _getCallLogs() async {
-    Iterable<CallLogEntry> entriess = await CallLog.get();
-    setState(() {
-      entries = entriess;
-    });
+    Iterable<CallLogEntry> ent = await CallLog.get();
+    for (int i = 0; i < 30; i++) {
+      Widget one;
+      if (i == 0) {
+        one = LogItem(
+          index: i,
+          prevLog: ent.elementAt(i),
+          log: ent.elementAt(i),
+        );
+      } else {
+        one = LogItem(
+          index: i,
+          prevLog: ent.elementAt(i - 1),
+          log: ent.elementAt(i),
+        );
+      }
+
+      items.add(one);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade200,
-      appBar: AppBar(
-          elevation: 0,
-          centerTitle: true,
-          title: MyAppBar(
-              title: "Phone",
-              icon1: Icons.filter_alt_outlined,
-              icon2: Icons.search_outlined,
-              icon3: Icons.more_horiz,
-              width: 40),
-          backgroundColor: Colors.white),
-      body: (entries != null && entries.isNotEmpty)
-          ? Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ListView.builder(
-                itemBuilder: (context, index) {
-                  CallLogEntry log = entries.elementAt(index);
-                  CallLogEntry prevLog =
-                      entries.elementAt(index > 0 ? index - 1 : index);
-                  return Padding(
-                    padding: const EdgeInsets.all(4),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _ShowDate(
-                            countt: index,
-                            log: log,
-                            prevLog: prevLog,
-                          ),
-                          Card(
-                              shape: const StadiumBorder(),
-                              child: ListTile(
-                                onTap: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            LogDetail(log: log))),
-                                title: Text(log.name ?? "Unsaved"),
-                                subtitle: Text(
-                                    "${DateTime.fromMillisecondsSinceEpoch(log.timestamp).hour.toString().padLeft(2, "0")}:${DateTime.fromMillisecondsSinceEpoch(log.timestamp).minute.toString().padLeft(2, "0")}      ${log.number}"),
-                                trailing: Type(log: log),
-                              ))
-                        ]),
-                  );
-                },
-              ),
-            )
-          : Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SpinKitSpinningLines(
-                      color: Theme.of(context).primaryColor, size: 50),
-                  const SizedBox(height: 8),
-                  Text(
-                    "Loading....",
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  )
-                ],
-              ),
-            ),
-    );
+        backgroundColor: Colors.grey.shade200,
+        appBar: AppBar(
+            elevation: 0,
+            centerTitle: true,
+            title: MyAppBar(
+                title: "Phone",
+                icon1: Icons.filter_alt_outlined,
+                icon2: Icons.search_outlined,
+                icon3: Icons.more_horiz,
+                width: 40),
+            backgroundColor: Colors.white),
+        body: SingleChildScrollView(
+          child: Column(
+            children: items,
+          ),
+        ));
   }
 }
 
@@ -153,7 +124,10 @@ class Type extends StatelessWidget {
       );
     } else if (log.callType.name == "incoming" ||
         log.callType.name == "wifiIncoming") {
-      return const Icon(Icons.call_received);
+      return const Icon(
+        Icons.call_received,
+        color: Colors.blueAccent,
+      );
     } else if (log.callType.name == "missed") {
       return Icon(
         Icons.call_missed,
@@ -168,5 +142,38 @@ class Type extends StatelessWidget {
     } else {
       return Text(log.callType.name);
     }
+  }
+}
+
+class LogItem extends StatelessWidget {
+  const LogItem({Key key, this.index, this.log, this.prevLog})
+      : super(key: key);
+
+  final int index;
+  final CallLogEntry log;
+  final CallLogEntry prevLog;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(0),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        _ShowDate(
+          countt: index,
+          log: log,
+          prevLog: prevLog,
+        ),
+        Card(
+            shape: const StadiumBorder(),
+            child: ListTile(
+              onTap: () => Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => LogDetail(log: log))),
+              title: Text(log.name ?? log.formattedNumber),
+              subtitle: Text(
+                  "${DateTime.fromMillisecondsSinceEpoch(log.timestamp).hour.toString().padLeft(2, "0")}:${DateTime.fromMillisecondsSinceEpoch(log.timestamp).minute.toString().padLeft(2, "0")}          ${log.name != null ? log.formattedNumber ?? log.number : ""}"),
+              trailing: Type(log: log),
+            ))
+      ]),
+    );
   }
 }

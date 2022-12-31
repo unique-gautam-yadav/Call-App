@@ -4,7 +4,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:slimmy_card/pages/contact_detail.dart';
 
-import 'appbar.dart';
+import '../utils/components.dart';
 
 class Contacts extends StatefulWidget {
   const Contacts({Key key}) : super(key: key);
@@ -17,9 +17,8 @@ class _ContactsState extends State<Contacts> {
   Iterable<Contact> contacts;
   @override
   void initState() {
-    super.initState();
-    _askPermissions("/");
     getContact();
+    super.initState();
   }
 
   getContact() async {
@@ -27,35 +26,6 @@ class _ContactsState extends State<Contacts> {
     setState(() {
       contacts = _contacts;
     });
-  }
-
-  Future<void> _askPermissions(String routeName) async {
-    PermissionStatus permissionStatus = await _getContactPermission();
-    if (permissionStatus != PermissionStatus.granted) {
-      _handleInvalidPermissions(permissionStatus);
-    }
-  }
-
-  Future<PermissionStatus> _getContactPermission() async {
-    PermissionStatus permission = await Permission.contacts.status;
-    if (permission != PermissionStatus.granted &&
-        permission != PermissionStatus.permanentlyDenied) {
-      PermissionStatus permissionStatus = await Permission.contacts.request();
-      return permissionStatus;
-    } else {
-      return permission;
-    }
-  }
-
-  void _handleInvalidPermissions(PermissionStatus permissionStatus) {
-    if (permissionStatus == PermissionStatus.denied) {
-      const snackBar = SnackBar(content: Text('Access to contact data denied'));
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    } else if (permissionStatus == PermissionStatus.permanentlyDenied) {
-      const snackBar =
-          SnackBar(content: Text('Contact data not available on device'));
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    }
   }
 
   @override
@@ -98,10 +68,7 @@ class _ContactsState extends State<Contacts> {
                         ),
                         title: Text(contact.displayName),
                         subtitle: Text(contact.phones.last.value),
-                        onTap: () async {
-                          await Future.delayed(
-                              const Duration(milliseconds: 300));
-                          // ignore: use_build_context_synchronously
+                        onTap: () {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
