@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:call_log/call_log.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:slimmy_card/pages/log_detail.dart';
-import 'package:intl/intl.dart';
+import 'package:slimmy_card/pages/contact_info.dart';
 
 import '../utils/components.dart';
 
@@ -40,8 +38,9 @@ class _CallLogsState extends State<CallLogs> {
           log: ent.elementAt(i),
         );
       }
-
-      items.add(one);
+      setState(() {
+        items.add(one);
+      });
     }
   }
 
@@ -67,47 +66,8 @@ class _CallLogsState extends State<CallLogs> {
   }
 }
 
-class _ShowDate extends StatelessWidget {
-  const _ShowDate({
-    Key key,
-    @required this.log,
-    @required this.countt,
-    this.prevLog,
-  }) : super(key: key);
-
-  final CallLogEntry log;
-  final int countt;
-  final CallLogEntry prevLog;
-
-  @override
-  Widget build(BuildContext context) {
-    int day = DateTime.fromMillisecondsSinceEpoch(log.timestamp).day;
-    int prevDay = DateTime.fromMillisecondsSinceEpoch(prevLog.timestamp).day;
-    int today = DateTime.now().day;
-    String date = DateFormat('dd MMMM yyyy')
-        .format(DateTime.fromMillisecondsSinceEpoch(log.timestamp));
-    if (day == prevDay && countt == 0) {
-      return Column(
-        children: const [Text("Today"), SizedBox(height: 8)],
-      );
-    } else if (day != prevDay) {
-      if (today - 1 == day) {
-        return Column(
-          children: const [Text("Yesterday"), SizedBox(height: 8)],
-        );
-      } else {
-        return Column(
-          children: [Text(date), const SizedBox(height: 8)],
-        );
-      }
-    } else {
-      return const SizedBox(width: 0.0, height: 0.0);
-    }
-  }
-}
-
-class Type extends StatelessWidget {
-  const Type({
+class LogTypeIcon extends StatelessWidget {
+  const LogTypeIcon({
     Key key,
     @required this.log,
   }) : super(key: key);
@@ -158,22 +118,22 @@ class LogItem extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(0),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        _ShowDate(
-          countt: index,
-          log: log,
-          prevLog: prevLog,
-        ),
         Card(
             shape: const StadiumBorder(),
             child: ListTile(
-              onTap: () => Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => LogDetail(log: log))),
+              onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ContactInfo(
+                          phone: log.number, name: log.name ?? "unsaved"))),
               title: Text(log.name ?? log.formattedNumber),
               subtitle: Text(
                   "${DateTime.fromMillisecondsSinceEpoch(log.timestamp).hour.toString().padLeft(2, "0")}:${DateTime.fromMillisecondsSinceEpoch(log.timestamp).minute.toString().padLeft(2, "0")}          ${log.name != null ? log.formattedNumber ?? log.number : ""}"),
-              trailing: Type(log: log),
+              trailing: LogTypeIcon(log: log),
             ))
       ]),
     );
   }
 }
+
+

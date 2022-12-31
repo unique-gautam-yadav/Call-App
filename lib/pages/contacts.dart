@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:slimmy_card/pages/contact_detail.dart';
+import 'package:slimmy_card/pages/contact_info.dart';
 
 import '../utils/components.dart';
 
@@ -72,9 +73,9 @@ class _ContactsState extends State<Contacts> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    ContactDetail(contact: contact),
-                              ));
+                                  builder: (context) => ContactInfo(
+                                      name: contact.displayName,
+                                      phone: contact.phones.first.value)));
                         },
                       ),
                     ),
