@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_print
-
 import 'package:call_log/call_log.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
@@ -167,7 +165,9 @@ class _ContactInfoState extends State<ContactInfo> {
                                                       color: Colors.white),
                                             ))
                                           : const Center(
-                                              child: Icon(Icons.person)))
+                                              child: Icon(Icons.person,
+                                                  color: Colors.white,
+                                                  size: 75)))
                               : Container(
                                   height: 100,
                                   width: 100,
@@ -176,7 +176,7 @@ class _ContactInfoState extends State<ContactInfo> {
                                       borderRadius: BorderRadius.circular(100)),
                                   child: const Center(
                                       child: Icon(Icons.person,
-                                          color: Colors.white, size: 100)))))
+                                          color: Colors.white, size: 75)))))
                 ],
               ),
             ),
@@ -187,24 +187,6 @@ class _ContactInfoState extends State<ContactInfo> {
       ),
     );
   }
-}
-
-String formatDuration(Duration duration) {
-  String res = "";
-  if (duration.inSeconds > 0) {
-    res += ", ";
-    if (duration.inHours > 0) {
-      res += "${duration.inHours.toString()} hr ";
-    }
-    if (duration.inMinutes > 0) {
-      res += "${duration.inMinutes - duration.inHours * 60} mins ";
-    }
-    if (duration.inSeconds > 0) {
-      res +=
-          "${duration.inSeconds - ((duration.inMinutes) - duration.inHours * 60) * 60} secs";
-    }
-  }
-  return res;
 }
 
 class LogItem extends StatelessWidget {
@@ -234,7 +216,7 @@ class LogItem extends StatelessWidget {
                 child: LogTypeIcon(log: log)),
             title: Text(DateFormat("EEE, dd MMM yy").format(time).toString()),
             subtitle: Text("${log.callType.name} call${formatDuration(dur)}"),
-            trailing: Text(DateFormat("hh:mm").format(time).toString()),
+            trailing: Text(DateFormat("HH:mm").format(time).toString()),
           ),
         ),
       ),

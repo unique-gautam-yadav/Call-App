@@ -105,3 +105,23 @@ class ShowDate extends StatelessWidget {
     }
   }
 }
+
+
+
+String formatDuration(Duration duration) {
+  String res = "";
+  if (duration.inSeconds > 0) {
+    res += ", ";
+    if (duration.inHours > 0) {
+      res += "${duration.inHours.toString()} hr ";
+    }
+    if (duration.inMinutes > 0) {
+      res += "${duration.inMinutes - duration.inHours * 60} mins ";
+    }
+    if (duration.inSeconds > 0) {
+      res +=
+          "${duration.inSeconds - ((duration.inMinutes) - duration.inHours * 60) * 60} secs";
+    }
+  }
+  return res;
+}
