@@ -23,7 +23,7 @@ class _CallLogsState extends State<CallLogs> {
 
   _getCallLogs() async {
     Iterable<CallLogEntry> ent = await CallLog.get();
-    for (int i = 0; i < 30; i++) {
+    for (int i = 0; i < ent.length; i++) {
       Widget one;
       if (i == 0) {
         one = LogItem(
@@ -118,6 +118,11 @@ class LogItem extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(0),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+         ShowDate(
+          countt: index,
+          log: log,
+          prevLog: prevLog,
+        ),
         Card(
             shape: const StadiumBorder(),
             child: ListTile(
