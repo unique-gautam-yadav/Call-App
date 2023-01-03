@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:call_log/call_log.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:intl/intl.dart';
 import 'package:slimmy_card/pages/contact_info.dart';
 
 import '../utils/components.dart';
@@ -20,13 +21,13 @@ class _CallLogsState extends State<CallLogs> {
 
   @override
   void initState() {
-    // _getCallLogs();
+    getLogsFirstTime();
     items = <Widget>[];
 
     super.initState();
   }
 
-  _getCallLogs() async {
+  getLogsFirstTime() async {
     Iterable<CallLogEntry> ent =
         await CallLog.query(dateTo: dateTo, dateFrom: dateFrom);
     for (int i = 0; i < ent.length; i++) {
@@ -48,49 +49,79 @@ class _CallLogsState extends State<CallLogs> {
         items.add(one);
       });
     }
-    dateTo = dateFrom;
   }
+
+  getLogs() async {
+    dateFrom = dateTo;
+    dateTo = DateTime.fromMillisecondsSinceEpoch(dateFrom)
+        .subtract(const Duration(days: 7))
+        .millisecondsSinceEpoch;
+    Iterable<CallLogEntry> ent =
+        await CallLog.query(dateFrom: dateFrom, dateTo: dateTo);
+    for (int i = 0; i < ent.length; i++) {
+      Widget one;
+      if (i == 0) {
+        one = LogItem(
+          index: i,
+          prevLog: ent.elementAt(i),
+          log: ent.elementAt(i),
+        );
+      } else {
+        one = LogItem(
+          index: i,
+          prevLog: ent.elementAt(i - 1),
+          log: ent.elementAt(i),
+        );
+      }
+      setState(() {
+        items.add(one);
+      });
+    }
+    print(ent.length);
+  }
+
+  ScrollController controller = ScrollController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            _getCallLogs();
+        appBar: AppBar(
+            elevation: 0,
+            centerTitle: true,
+            title: MyAppBar(
+                title: "Phone",
+                icon1: Icons.filter_alt_outlined,
+                icon2: Icons.search_outlined,
+                icon3: Icons.more_horiz,
+                width: 40),
+            backgroundColor: Colors.white),
+        body: GestureDetector(
+          onPanDown: (details) {
+            print("SDlkfjj");
           },
-          child: const Icon(Icons.get_app)),
-      backgroundColor: Colors.grey.shade200,
-      appBar: AppBar(
-          elevation: 0,
-          centerTitle: true,
-          title: MyAppBar(
-              title: "Phone",
-              icon1: Icons.filter_alt_outlined,
-              icon2: Icons.search_outlined,
-              icon3: Icons.more_horiz,
-              width: 40),
-          backgroundColor: Colors.white),
-      body: items != null && items.isNotEmpty
-          ? SingleChildScrollView(
+          child: SingleChildScrollView(
+              controller: controller,
               child: Column(
-              children: items,
-            ))
-          : Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SpinKitSpinningLines(
-                      color: Theme.of(context).primaryColor, size: 50),
-                  const SizedBox(height: 8),
-                  Text(
-                    "Loading....",
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  )
-                ],
-              ),
-            ),
-    );
+                children: items != null && items.isNotEmpty
+                    ? items
+                    : Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SpinKitSpinningLines(
+                                color: Theme.of(context).primaryColor,
+                                size: 50),
+                            const SizedBox(height: 8),
+                            Text(
+                              "Loading....",
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            )
+                          ],
+                        ),
+                      ),
+              )),
+        ));
   }
 }
 

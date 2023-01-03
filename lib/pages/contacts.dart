@@ -18,7 +18,7 @@ class _ContactsState extends State<Contacts> {
   @override
   void initState() {
     items = <Widget>[];
-    // getContact();
+    getContact();
     super.initState();
   }
 
