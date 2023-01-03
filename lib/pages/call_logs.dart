@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:call_log/call_log.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:slimmy_card/pages/contact_info.dart';
 
 import '../utils/components.dart';
@@ -13,16 +14,21 @@ class CallLogs extends StatefulWidget {
 
 class _CallLogsState extends State<CallLogs> {
   List<Widget> items;
+  int dateFrom = DateTime.now().millisecondsSinceEpoch;
+  int dateTo =
+      DateTime.now().subtract(const Duration(days: 7)).millisecondsSinceEpoch;
+
   @override
   void initState() {
-    _getCallLogs();
+    // _getCallLogs();
     items = <Widget>[];
 
     super.initState();
   }
 
   _getCallLogs() async {
-    Iterable<CallLogEntry> ent = await CallLog.get();
+    Iterable<CallLogEntry> ent =
+        await CallLog.query(dateFrom: dateFrom, dateTo: dateFrom);
     for (int i = 0; i < ent.length; i++) {
       Widget one;
       if (i == 0) {
@@ -47,22 +53,43 @@ class _CallLogsState extends State<CallLogs> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.grey.shade200,
-        appBar: AppBar(
-            elevation: 0,
-            centerTitle: true,
-            title: MyAppBar(
-                title: "Phone",
-                icon1: Icons.filter_alt_outlined,
-                icon2: Icons.search_outlined,
-                icon3: Icons.more_horiz,
-                width: 40),
-            backgroundColor: Colors.white),
-        body: SingleChildScrollView(
-          child: Column(
-            children: items,
-          ),
-        ));
+      floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            _getCallLogs();
+          },
+          child: const Icon(Icons.get_app)),
+      backgroundColor: Colors.grey.shade200,
+      appBar: AppBar(
+          elevation: 0,
+          centerTitle: true,
+          title: MyAppBar(
+              title: "Phone",
+              icon1: Icons.filter_alt_outlined,
+              icon2: Icons.search_outlined,
+              icon3: Icons.more_horiz,
+              width: 40),
+          backgroundColor: Colors.white),
+      body: items != null && items.isNotEmpty
+          ? SingleChildScrollView(
+              child: Column(
+              children: items,
+            ))
+          : Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SpinKitSpinningLines(
+                      color: Theme.of(context).primaryColor, size: 50),
+                  const SizedBox(height: 8),
+                  Text(
+                    "Loading....",
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  )
+                ],
+              ),
+            ),
+    );
   }
 }
 
@@ -118,7 +145,7 @@ class LogItem extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(0),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-         ShowDate(
+        ShowDate(
           countt: index,
           log: log,
           prevLog: prevLog,
@@ -140,5 +167,3 @@ class LogItem extends StatelessWidget {
     );
   }
 }
-
-

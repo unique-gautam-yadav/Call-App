@@ -28,7 +28,6 @@ class _ContactInfoState extends State<ContactInfo> {
       contacts = lCon;
     });
     print("contact =  ${contacts.length}");
-    //
   }
 
   fetchLog() async {

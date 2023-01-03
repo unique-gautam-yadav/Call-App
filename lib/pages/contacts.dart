@@ -6,7 +6,6 @@ import 'package:slimmy_card/pages/add_contact.dart';
 import 'package:slimmy_card/pages/contact_info.dart';
 import 'package:slimmy_card/pages/search_contact.dart';
 
-
 class Contacts extends StatefulWidget {
   const Contacts({Key key}) : super(key: key);
 
@@ -19,7 +18,7 @@ class _ContactsState extends State<Contacts> {
   @override
   void initState() {
     items = <Widget>[];
-    getContact();
+    // getContact();
     super.initState();
   }
 
@@ -63,7 +62,7 @@ class _ContactsState extends State<Contacts> {
               icon: const Icon(CupertinoIcons.search)),
         ],
       ),
-      body: items.isNotEmpty
+      body: items != null && items.isNotEmpty
           ? SingleChildScrollView(
               child: Column(
               children: items,
