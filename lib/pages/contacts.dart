@@ -6,7 +6,6 @@ import 'package:slimmy_card/pages/add_contact.dart';
 import 'package:slimmy_card/pages/contact_info.dart';
 import 'package:slimmy_card/pages/search_contact.dart';
 
-import '../utils/components.dart';
 
 class Contacts extends StatefulWidget {
   const Contacts({Key key}) : super(key: key);
