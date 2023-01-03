@@ -14,8 +14,8 @@ class CallLogs extends StatefulWidget {
 
 class _CallLogsState extends State<CallLogs> {
   List<Widget> items;
-  int dateFrom = DateTime.now().millisecondsSinceEpoch;
-  int dateTo =
+  int dateTo = DateTime.now().millisecondsSinceEpoch;
+  int dateFrom =
       DateTime.now().subtract(const Duration(days: 7)).millisecondsSinceEpoch;
 
   @override
@@ -28,7 +28,7 @@ class _CallLogsState extends State<CallLogs> {
 
   _getCallLogs() async {
     Iterable<CallLogEntry> ent =
-        await CallLog.query(dateFrom: dateFrom, dateTo: dateFrom);
+        await CallLog.query(dateTo: dateTo, dateFrom: dateFrom);
     for (int i = 0; i < ent.length; i++) {
       Widget one;
       if (i == 0) {
@@ -48,6 +48,7 @@ class _CallLogsState extends State<CallLogs> {
         items.add(one);
       });
     }
+    dateTo = dateFrom;
   }
 
   @override
